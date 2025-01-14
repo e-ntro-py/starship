@@ -1,4 +1,4 @@
-# Preguntas frecuentes (FAQ)
+# Preguntas frecuentes
 
 ## ¿Cuál es la configuración usada en el GIF de demostración?
 
@@ -38,7 +38,7 @@ NUM_JOBS=$(jobs -p | wc -l)
 PS1="$(starship prompt --status=$STATUS --jobs=$NUM_JOBS)"
 ```
 
-La [implementación de Bash](https://github.com/starship/starship/blob/master/src/init/starship.bash) integrada en Starship es un poco más compleja para permitir funciones avanzadas como el [módulo Duración del Comando](https://starship.rs/config/#command-duration) y para garantizar que Starship sea compatible con las configuraciones de Bash preinstaladas.
+La [implementación de Bash](https://github.com/starship/starship/blob/master/src/init/starship.bash) en Starship es sensíblemente is ligeramente más compleja para permitir características avanzadas como [el módulo de duración de comando](https://starship.rs/config/#command-duration) y para asegurar que Starship es compatible con las configuraciones preinstaladas de Bash.
 
 Para obtener una lista de todos los parámetros aceptados por `el prompt de Starship`, usa el siguiente comando:
 
@@ -53,12 +53,12 @@ El símbolo de sistema usará tanto contexto como le proveas, pero no hay parám
 Si obtienes un error como "_version 'GLIBC_2.18' not found (required by starship)_" al usar el binario precompilado (por ejemplo, en CentOS 6 o 7), puedes usar el binario compilado con `musl` en vez de `glibc`:
 
 ```sh
-sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- --platform unknown-linux-musl
+curl -sS https://starship.rs/install.sh | sh -s -- --platform unknown-linux-musl
 ```
 
 ## ¿Por qué veo advertencias `Executing command"..." timed out.`?
 
-Starship ejecuta diferentes comandos para obtener la información que se muestra en el prompt, por ejemplo la versión de un programa o el estado actual de git. Para asegurarse que starship no se quede congelado mientras trata de ejecutar estos comandos, establecimos un límite de tiempo, si un comando tarda más tiempo que este límite starship detendrá la ejecución del comando y mostrara la advertencia anterior, este es el comportamiento esperado. Este límite de tiempo es configurable usando la [llave `command_timeout`](/config/#prompt) así que si lo desea puede aumentar el límite de tiempo. También puedes seguir los pasos de depuración a continuación para ver qué comando está siendo lento y ver si puedes optimizarlo. Finalmente, puedes establecer la variable de entorno `STARSHIP_LOG` a `error` para ocultar estas advertencias.
+Starship ejecuta diferentes comandos para obtener la información que se muestra en el prompt, por ejemplo la versión de un programa o el estado actual de git. Para asegurarse que starship no se quede congelado mientras trata de ejecutar estos comandos, establecimos un límite de tiempo, si un comando tarda más tiempo que este límite starship detendrá la ejecución del comando y mostrara la advertencia anterior, este es el comportamiento esperado. Este límite de tiempo es configurable usando la [llave `command_timeout`](../config/#prompt) así que si lo desea puede aumentar el límite de tiempo. También puedes seguir los pasos de depuración a continuación para ver qué comando está siendo lento y ver si puedes optimizarlo. Finalmente, puedes establecer la variable de entorno `STARSHIP_LOG` a `error` para ocultar estas advertencias.
 
 ## Veo símbolos que no entiendo ni espero, ¿qué significan?
 
@@ -72,7 +72,7 @@ Puede habilitar los registros de depuración usando la variable de entorno `STAR
 env STARSHIP_LOG=trace starship module rust
 ```
 
-Si starship está siendo lento, puedes intentar usar el comando `timings` para ver si hay un módulo en particular o un comando a culpar.
+If starship is being slow you can try using the `timings` command to see if there is a particular module or command that is to blame.
 
 ```sh
 env STARSHIP_LOG=trace starship timings
@@ -80,7 +80,7 @@ env STARSHIP_LOG=trace starship timings
 
 Esto producirá el registro de rastreo y un desglose de todos los módulos que tomaron más de 1 ms para ejecutarse o producir alguna salida.
 
-Finalmente, si encuentras un error puedes usar el comando `bug-report` para crear un issue en Github.
+Finalmente si encuentras un error puedes usar el comando `bug-report` para crear un issue en GitHub.
 
 ```sh
 starship bug-report
@@ -120,3 +120,11 @@ Si Starship fue instalado usando el guión de instalación, el siguiente comando
 # Localiza y elimina el binario de starship
 sh -c 'rm "$(comando -v 'starship')"'
 ```
+
+## ¿Cómo instalo Starship sin `sudo`?
+
+El script de instalación del shell (`https://starship.rs/install.sh`) solo intenta usar `sudo` si el directorio de instalación no es escribible para el usuario actual. The default installation directory is the value of the `$BIN_DIR` environment variable or `/usr/local/bin` if `$BIN_DIR` is not set. Si en su lugar establece el directorio de instalación a uno que tenga permisos de escritura para su usuario, deberías ser capaz de instalar starship sin `sudo`. Por ejemplo, `curl -sS https://starship.rs/install.sh | sh -s -- -b ~/.local/bin` usa la opción de línea de comando `b` del script de instalación para establecer el directorio de instalación a `~/.local/bin`.
+
+Para una instalación no interactiva de Starship, no te olvides de añadir la opción `y` para omitir la confirmación. Consulte la fuente del script de instalación para ver una lista de todas las opciones de instalación soportadas.
+
+Al usar el gestor de paquetes, vea la documentación de su gestor de paquetes acerca de instalación con o sin `sudo`.
